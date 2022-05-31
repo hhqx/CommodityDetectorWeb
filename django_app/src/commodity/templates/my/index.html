@@ -1,0 +1,243 @@
+{% extends 'my/base-presentation.html' %}
+
+{% block title %} Commodity Detection {% endblock title %}
+
+ Specific CSS goes HERE
+{% block stylesheets %}{% endblock stylesheets %}
+
+{% block body_class %} index-page {% endblock body_class %}
+
+{% block content %}
+
+
+<div class="container position-sticky z-index-sticky top-0">
+    <div class="row">
+      <div class="col-12">
+        <nav class="navbar navbar-expand-lg  blur blur-rounded top-0 z-index-fixed shadow position-absolute my-3 py-2 start-0 end-0 mx-4 bg-gradient-faded-white">
+          <div class="container-fluid">
+            <a class="navbar-brand font-weight-bolder ms-sm-3"
+                rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom">
+              Commodity Detection System
+            </a>
+            <button class="navbar-toggler shadow-none ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navigation" aria-controls="navigation" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon mt-2">
+                <span class="navbar-toggler-bar bar1"></span>
+                <span class="navbar-toggler-bar bar2"></span>
+                <span class="navbar-toggler-bar bar3"></span>
+              </span>
+            </button>
+          </div>
+        </nav>
+        <!-- End Navbar -->
+      </div>
+    </div>
+  </div>
+
+
+<div class=" py-5"> </div>
+
+<!--main-->
+<div style="display: flex; justify-content: center; align-items:flex-start">
+<!--  left-->
+  <div style="position: relative; width:30%">
+    <!--Select Images-->
+    <div class=" py-5"> </div>
+    <h2 class="text-center">Select images</h2>
+    <section id="form-select">
+      <div class="container py-3">
+        <div class="row">
+          <div class="col-lg-12 mx-auto d-flex justify-content-center flex-column">
+            <h4 class="text-center">Upload images from local </h4>
+            <form action="{% url 'commodity:home'%}" role="form" method="post" autocomplete="off", enctype="multipart/form-data">
+                {% csrf_token %}
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-md-6">
+                    <label>Image 1</label>
+                    <div class="input-group mb-4">
+{#                        <input id="id-img1" type="file" required name="img1">#}
+                      <input class="form-control" type="file" required name="img1" >
+                    </div>
+                  </div>
+                  <div class="col-md-6 ">
+                    <label>Image 2</label>
+                    <div class="input-group">
+{#                        <input id="id-img1" type="file" required name="img2">#}
+                      <input class="form-control"  type="file" required name="img2" >
+                    </div>
+                  </div>
+
+                </div>
+                <div class="row">
+                  <div class="col-md-12">
+                    <button type="submit" class="btn bg-success w-100">Upload</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+            <h4 class="text-center py-2">Select images from database</h4>
+            <div class="row">
+              <div class="col-md-4">
+                <form action="{% url 'commodity:index_cmd' "previous"%}" role="form" method="post" autocomplete="off">
+                    {% csrf_token %}
+{#                  <button href="{% url 'commodity:cmd' "next"%}" type="" class="btn bg-gradient-faded-info w-100">Previous</button>#}
+                  <button type="submit" class="btn bg-gradient-faded-info w-100">Previous</button>
+                </form>
+              </div>
+              <div class="col-md-4">
+                <form action="{% url 'commodity:index_cmd' "random-new"%}" role="form" method="post" autocomplete="off">
+                    {% csrf_token %}
+                  <button type="submit" class="btn bg-success w-100">Random NEW</button>
+                </form>
+              </div>
+              <div class="col-md-4">
+                <form action="{% url 'commodity:index_cmd' "next"%}" role="form" method="post" autocomplete="off">
+                    {% csrf_token %}
+                  <button type="submit" class="btn bg-gradient-faded-info w-100">Next</button>
+                </form>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+    </section>
+    <!--Detect and Calculate-->
+    <div class=" py-5"> </div>
+    <h2 class="text-center">Detect and calculate</h2>
+    <section id="form-config">
+    <div class="container py-3">
+      <div class="row">
+        <div class="col-lg-12 mx-auto d-flex justify-content-center flex-column">
+          <h4 class="text-center">Set configuration </h4>
+          <form action="{% url 'commodity:home'%}" role="form" method="post" autocomplete="off">
+              {% csrf_token %}
+            <div class="card-body">
+              <div class="row">
+                <div class="col-md-6">
+                  <label>nms_thresh</label>
+                  <div class="input-group mb-4">
+                    <input class="form-control" placeholder="" name="nms_thresh" type="float" value="0.018" required >
+                  </div>
+                </div>
+                <div class="col-md-6">
+                  <label>iou_thresh</label>
+                  <div class="input-group mb-4">
+                    <input class="form-control" placeholder="" name="iou_thresh" type="float" value="0.2" required >
+                  </div>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-md-12">
+                  <button type="submit" class="btn bg-success w-100">Calculate</button>
+                </div>
+              </div>
+            </div>
+          </form>
+
+
+        </div>
+      </div>
+    </div>
+  </section>
+
+  </div>
+
+<!--  right-->
+  <div style="position: relative;  width:70%">
+
+    <!--image input-->
+    <div class=" py-3"> </div>
+    <h2 class="text-center">Images to detected</h2>
+    <div  style="display:flex; justify-content: center; align-items:flex-start">
+      <div class="px-1" style="position:relative; width: 40%">
+        <li><strong> Image 1 </strong></li>
+        {% if detectors %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src={{ detectors.img1urls }}>
+        {% else %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src="/media/up1.jpg?t="+Math.random()>{% endif %}
+      </div>
+      <div class="px-1" style="position:relative; width: 40%">
+        <li><strong> Image 2 </strong></li>
+        {% if detectors %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src={{ detectors.img2urls }}>
+        {% else %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src="/media/up2.jpg?t="+Math.random()>{% endif %}
+      </div>
+    </div>
+    <!--image output-->
+    <div class=" py-3"> </div>
+    <h2 class="text-center">Images after detection</h2>
+  {% if table %}
+    <div  style="display:flex; justify-content: center; align-items:flex-start">
+      <div class="px-1" style="position:relative; width: 40%">
+        <li><strong> Image 1 result </strong></li>
+        {% if results %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src={{ results.img1urls }}>
+        {% else %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src="/media/up1--out.jpg?t="+Math.random()>{% endif %}
+      </div>
+      <div class="px-1" style="position:relative; width: 40%">
+        <li><strong> Image 2 result </strong></li>
+        {% if results %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src={{ results.img2urls }}>
+        {% else %}<img style="position:relative; height:100%; width: 100%; border-radius: 10px;" alt="Image placeholder" src="/media/up2--out.jpg?t="+Math.random()>{% endif %}
+      </div>
+    </div>
+  {% else %}
+      <div class=" py-2"> </div>
+      <h6 class="text-center">Click "CALCULATE" button to start detection.</h6>
+      <div class=" py-5"> </div>
+  {% endif %}
+
+    <!-- list of results-->
+    <section class="pt-5 mt-5" id="table-ex1">
+      <div class="container">
+        <div class="row justify-content-center">
+          <div class="col-lg-10">
+            <div class="card">
+              <div class="table-responsive">
+                <h3 class="text-center">List of results</h3>
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      {% for col in table.colname %}
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                          {{ col }}</th>
+                      {% endfor %}
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% for row in table.data %}
+                    <tr>
+                    {% for coli in row %}
+                      <td class="align-middle text-center">
+                        <span class="text-secondary text-xs font-weight-bold"> {{ coli }}</span>
+                      </td>
+                    {% endfor %}
+                    </tr>
+                  {% endfor %}
+
+
+
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  <div class=" py-5"> </div>
+  <div class=" py-5"> </div>
+
+
+  </div>
+
+</div>
+
+
+
+
+
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %}
+
+
+{% endblock javascripts %}
